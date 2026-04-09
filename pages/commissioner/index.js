@@ -289,12 +289,9 @@ export default function CommissionerPage() {
 
               return (
                 <div key={tx.id} style={{
-                  padding: '12px 0',
-                  borderBottom: '1px solid #f3f4f6',
-                  background: hasContract ? '#fffbeb' : 'transparent',
-                  margin: hasContract ? '0 -1.25rem',
                   padding: hasContract ? '12px 1.25rem' : '12px 0',
-                }}>
+borderBottom: '1px solid #f3f4f6',
+background: hasContract ? '#fffbeb' : 'transparent',
                   <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
                     <div style={{ flex: 1 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
