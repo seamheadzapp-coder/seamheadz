@@ -13,7 +13,7 @@ export default async function handler(req, res) {
 
   try {
     const txRes = await fetch(
-      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/transactions;types=add,drop,trade;count=25?format=json`,
+      `https://fantasysports.yahooapis.com/fantasy/v2/league/${leagueKey}/transactions;types=add,drop,trade;count=100?format=json`,
       {
         headers: { 'Authorization': `Bearer ${accessToken}` },
       }
