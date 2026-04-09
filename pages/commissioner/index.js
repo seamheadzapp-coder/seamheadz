@@ -234,7 +234,7 @@ export default function CommissionerPage() {
           <div style={{ fontSize: 22, fontWeight: 600, color: '#111' }}>
             Seamhead<span style={{ color: '#16a34a' }}>z</span> <span style={{ fontSize: 14, fontWeight: 400, color: '#6b7280' }}>Commissioner</span>
           </div>
-          <Link href="/" style={{ fontSize: 13, color: '#6b7280', textDecoration: 'none', padding: '6px 14px', border: '1px solid #e5e7eb', borderRadius: 8 }}>← League overview</Link>
+          <a href="/" style={{ fontSize: 13, color: '#6b7280', textDecoration: 'none', padding: '6px 14px', border: '1px solid #e5e7eb', borderRadius: 8 }}>← League overview</a>
         </div>
 
         {message && (
