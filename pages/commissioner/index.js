@@ -258,9 +258,7 @@ export default function CommissionerPage() {
                 ...p,
                 contract: findContract(p.name)
               })).filter(p => p.contract)
-
               const hasContract = contractedPlayers.length > 0
-
               return (
                 <div key={tx.id} style={{
                   padding: hasContract ? '12px 1.25rem' : '12px 0',
@@ -426,31 +424,35 @@ export default function CommissionerPage() {
 
         {activeTab === 'all' && (
           <div style={s.card}>
-            <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 12, color: '#111' }}>All active contracts</div>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
-              <thead>
-                <tr>
-                  {['Team', 'Player', 'Yr', 'Current salary', 'Remaining'].map(h => (
-                    <th key={h} style={{ textAlign: 'left', padding: '5px 8px', color: '#9ca3af', fontWeight: 400, borderBottom: '1px solid #f3f4f6', fontSize: 11, textTransform: 'uppercase' }}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {contracts.map((c, i) => {
-                  const team = teams.find(t => t.id === c.team_id)
-                  const rem = c.salaries.length - c.current_year + 1
-                  return (
-                    <tr key={c.id} style={{ borderBottom: '1px solid #f9fafb' }}>
-                      <td style={{ padding: '7px 8px', color: '#6b7280', fontSize: 12 }}>{team?.name}</td>
-                      <td style={{ padding: '7px 8px', fontWeight: 500, color: '#111' }}>{c.player}</td>
-                      <td style={{ padding: '7px 8px', color: '#6b7280' }}>{c.current_year}/{c.salaries.length}</td>
-                      <td style={{ padding: '7px 8px', color: '#16a34a', fontWeight: 600 }}>${getCurSalary(c)}</td>
-                      <td style={{ padding: '7px 8px', color: '#6b7280' }}>{rem} yr{rem !== 1 ? 's' : ''}</td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
+            <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 12, color: '#111' }}>All active contracts — by team</div>
+            {teams.map(team => {
+              const teamContracts = contracts.filter(c => c.team_id === team.id)
+              if (teamContracts.length === 0) return null
+              const teamTotal = teamContracts.reduce((s, c) => s + getCurSalary(c), 0)
+              return (
+                <div key={team.id} style={{ marginBottom: 20 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 8px', background: '#f9fafb', borderRadius: 6, marginBottom: 4 }}>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: '#111' }}>{team.name}</span>
+                    <span style={{ fontSize: 12, color: '#16a34a', fontWeight: 600 }}>${teamTotal} total</span>
+                  </div>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+                    <tbody>
+                      {teamContracts.map((c) => {
+                        const rem = c.salaries.length - c.current_year + 1
+                        return (
+                          <tr key={c.id} style={{ borderBottom: '1px solid #f9fafb' }}>
+                            <td style={{ padding: '6px 8px', fontWeight: 500, color: '#111' }}>{c.player}</td>
+                            <td style={{ padding: '6px 8px', color: '#6b7280', fontSize: 12 }}>Yr{c.current_year}/{c.salaries.length}</td>
+                            <td style={{ padding: '6px 8px', color: '#16a34a', fontWeight: 600 }}>${getCurSalary(c)}</td>
+                            <td style={{ padding: '6px 8px', color: '#6b7280', fontSize: 12 }}>{rem} yr{rem !== 1 ? 's' : ''} left</td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )
+            })}
           </div>
         )}
 
