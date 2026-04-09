@@ -7,7 +7,7 @@ export default async function handler(req, res) {
 
   try {
     const clientId = 'dj0yJmk9b3luZWl3Qm1GSjBPJmQ9WVdrOU9WVkJXbFl3Um1RbWNHbzlNQT09JnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTI2'
-    const clientSecret = process.env.YAHOO_CLIENT_SECRET
+    const clientSecret = 'b78b11aa61611614a63ef59789b1753fe838d301'
     const redirectUri = 'https://seamheadz.vercel.app/api/auth/callback'
 
     const credentials = Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
