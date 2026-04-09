@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import Head from 'next/head'
-import Link from 'next/link'
 import { supabase } from '../../lib/supabase'
 
 const COMMISSIONER_PASSWORD = 'seamheadz2026'
@@ -27,7 +26,6 @@ export default function CommissionerPage() {
   useEffect(() => {
     if (authed) {
       loadData()
-      // Check if coming back from Yahoo auth
       if (window.location.search.includes('yahoo=connected')) {
         setYahooConnected(true)
         loadTransactions()
@@ -86,7 +84,6 @@ export default function CommissionerPage() {
     return contracts.find(c => c.id === parseInt(selectedContract))
   }
 
-  // Check if a player name matches any active contract
   function findContract(playerName) {
     if (!playerName) return null
     const clean = playerName.toLowerCase().replace(/[^a-z\s]/g, '').trim()
@@ -109,16 +106,9 @@ export default function CommissionerPage() {
     const remainingSalaries = contract.salaries.slice(contract.current_year - 1)
     const deadAmount = remainingSalaries.reduce((s, v) => s + v, 0)
     const team = teams.find(t => t.id === contract.team_id)
-
     await supabase.from('contracts').update({ active: false }).eq('id', contract.id)
-    await supabase.from('dead_money').insert({
-      team_id: contract.team_id,
-      player: contract.player,
-      amount: deadAmount,
-      season: 2026
-    })
+    await supabase.from('dead_money').insert({ team_id: contract.team_id, player: contract.player, amount: deadAmount, season: 2026 })
     await supabase.from('teams').update({ dead_money: (team.dead_money || 0) + deadAmount }).eq('id', team.id)
-
     setMessage(`✓ Dropped ${contract.player}. $${deadAmount} added as dead money.`)
     setSaving(false)
     setAction(null)
@@ -131,11 +121,9 @@ export default function CommissionerPage() {
     const contract = getContract()
     if (!contract || !targetTeam) return
     setSaving(true)
-
     await supabase.from('contracts').update({ team_id: parseInt(targetTeam) }).eq('id', contract.id)
     const fromTeam = teams.find(t => t.id === contract.team_id)
     const toTeam = teams.find(t => t.id === parseInt(targetTeam))
-
     setMessage(`✓ Traded ${contract.player} from ${fromTeam.name} to ${toTeam.name}.`)
     setSaving(false)
     setAction(null)
@@ -149,7 +137,6 @@ export default function CommissionerPage() {
     const contract = getContract()
     if (!contract) return
     setSaving(true)
-
     if (contract.current_year >= contract.salaries.length) {
       await supabase.from('contracts').update({ active: false }).eq('id', contract.id)
       setMessage(`✓ ${contract.player}'s contract expired and was removed.`)
@@ -157,7 +144,6 @@ export default function CommissionerPage() {
       await supabase.from('contracts').update({ current_year: contract.current_year + 1 }).eq('id', contract.id)
       setMessage(`✓ ${contract.player} advanced to year ${contract.current_year + 1}. New salary: $${contract.salaries[contract.current_year]}.`)
     }
-
     setSaving(false)
     setAction(null)
     setSelectedTeam('')
@@ -165,23 +151,15 @@ export default function CommissionerPage() {
     await loadData()
   }
 
-  // Quick drop from transactions panel
   async function quickDrop(contract) {
     if (!confirm(`Drop ${contract.player}? This will create dead money.`)) return
     setSaving(true)
     const remainingSalaries = contract.salaries.slice(contract.current_year - 1)
     const deadAmount = remainingSalaries.reduce((s, v) => s + v, 0)
     const team = teams.find(t => t.id === contract.team_id)
-
     await supabase.from('contracts').update({ active: false }).eq('id', contract.id)
-    await supabase.from('dead_money').insert({
-      team_id: contract.team_id,
-      player: contract.player,
-      amount: deadAmount,
-      season: 2026
-    })
+    await supabase.from('dead_money').insert({ team_id: contract.team_id, player: contract.player, amount: deadAmount, season: 2026 })
     await supabase.from('teams').update({ dead_money: (team.dead_money || 0) + deadAmount }).eq('id', team.id)
-
     setMessage(`✓ Dropped ${contract.player}. $${deadAmount} dead money added to ${team.name}.`)
     setSaving(false)
     await loadData()
@@ -244,14 +222,12 @@ export default function CommissionerPage() {
           </div>
         )}
 
-        {/* Tabs */}
         <div style={{ marginBottom: 16 }}>
           <button style={s.tab(activeTab === 'transactions')} onClick={() => setActiveTab('transactions')}>Yahoo transactions</button>
           <button style={s.tab(activeTab === 'tools')} onClick={() => setActiveTab('tools')}>Contract tools</button>
           <button style={s.tab(activeTab === 'all')} onClick={() => setActiveTab('all')}>All contracts</button>
         </div>
 
-        {/* Yahoo Transactions Tab */}
         {activeTab === 'transactions' && (
           <div style={s.card}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
@@ -278,21 +254,19 @@ export default function CommissionerPage() {
             )}
 
             {!txLoading && transactions.map(tx => {
-              // Check if any player in this transaction has a contract
               const contractedPlayers = tx.players.map(p => ({
                 ...p,
                 contract: findContract(p.name)
               })).filter(p => p.contract)
 
               const hasContract = contractedPlayers.length > 0
-              const isDrop = tx.type === 'drop' || tx.players.some(p => !p.type || p.type === 'drop')
 
               return (
                 <div key={tx.id} style={{
                   padding: hasContract ? '12px 1.25rem' : '12px 0',
-borderBottom: '1px solid #f3f4f6',
-background: hasContract ? '#fffbeb' : 'transparent',
-              }}>
+                  borderBottom: '1px solid #f3f4f6',
+                  background: hasContract ? '#fffbeb' : 'transparent',
+                }}>
                   <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
                     <div style={{ flex: 1 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
@@ -328,7 +302,7 @@ background: hasContract ? '#fffbeb' : 'transparent',
                             )}
                             {tx.type === 'trade' && (
                               <button style={{ ...s.btnSmall, background: '#2563eb' }}
-                                onClick={() => { setActiveTab('tools'); setAction('trade'); }}>
+                                onClick={() => { setActiveTab('tools'); setAction('trade') }}>
                                 Process trade
                               </button>
                             )}
@@ -343,7 +317,6 @@ background: hasContract ? '#fffbeb' : 'transparent',
           </div>
         )}
 
-        {/* Contract Tools Tab */}
         {activeTab === 'tools' && (
           <>
             {!action && (
@@ -451,7 +424,6 @@ background: hasContract ? '#fffbeb' : 'transparent',
           </>
         )}
 
-        {/* All Contracts Tab */}
         {activeTab === 'all' && (
           <div style={s.card}>
             <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 12, color: '#111' }}>All active contracts</div>
