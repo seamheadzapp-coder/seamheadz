@@ -19,13 +19,16 @@ export default function Home() {
 
         {/* Header */}
         <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:'1.5rem', paddingBottom:'1rem', borderBottom:'1px solid #e5e7eb' }}>
-          <div style={{ fontSize:24, fontWeight:600, color:'#111' }}>
-            Seamhead<span style={{ color:'#16a34a' }}>z</span>
-          </div>
-          <div style={{ fontSize:12, background:'#f3f4f6', border:'1px solid #e5e7eb', borderRadius:8, padding:'4px 10px', color:'#6b7280' }}>
-            {CURRENT_YEAR} Season · {LIMIT} contract slots
-          </div>
-        </div>
+  <div style={{ fontSize:24, fontWeight:600, color:'#111' }}>
+    Seamhead<span style={{ color:'#16a34a' }}>z</span>
+  </div>
+  <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+    <div style={{ fontSize:12, background:'#f3f4f6', border:'1px solid #e5e7eb', borderRadius:8, padding:'4px 10px', color:'#6b7280' }}>
+      2026 Season · {LIMIT} contract slots
+    </div>
+    <a href="/commissioner" style={{ fontSize:12, padding:'4px 10px', borderRadius:8, border:'1px solid #e5e7eb', color:'#6b7280', textDecoration:'none', background:'#fff' }}>Commissioner ⚙</a>
+  </div>
+</div>
 
         {/* Tabs */}
         <div style={{ display:'flex', gap:8, marginBottom:'1.5rem', flexWrap:'wrap' }}>
